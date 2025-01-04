@@ -3,7 +3,14 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 class ramsete {
     public:
-    void follow (std::vector<std::vector<double>> path, double initalheading, double linvel, double angvel, double finalheading, double settletime) {
+    /**
+     * Implementation for the ramsete algoritm 
+     * 
+     * \param path  
+     *      input points for path here in {x,y,theta,linvel,angvel,direction}
+     */
+    void follow (std::vector<std::vector<double>> path, double initalheading, double linvel, double angvel, double finalheading, double settletime, 
+    std::function<void(double,double)> conditions = [](double,double){return;}) {
         double currentx;
         double currenty;
         double currentheading;
@@ -85,7 +92,14 @@ class ramsete {
 
             pros::delay(10); 
             }
+            conditions(currentx,currenty);
         } 
     }
 
-};
+}; 
+
+bool withintol (double var,double check,double tol = .2) {
+    if ((check-tol) < var < (check+tol)) {
+        return true;
+    } else return false;
+}

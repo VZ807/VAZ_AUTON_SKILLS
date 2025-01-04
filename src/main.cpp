@@ -2,6 +2,7 @@
 #include "odom.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "ramsete.hpp"
+#include "paths.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -61,7 +62,19 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	ramsete drive;
+	auto path1cond = [](double x,double y) {
+			if (withintol(x,10) && withintol(y,10)) {
+				intake.move(600);
+			}
+			return;	 
+	};
+
+	drive.follow(path1,90,300,200,0,200,path1cond);
+
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
