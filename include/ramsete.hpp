@@ -8,6 +8,18 @@ class ramsete {
      * 
      * \param path  
      *      input points for path here in {x,y,theta,linvel,angvel,direction}
+     * \param initialheading 
+     *      provide initial heading for the path as it is not calculated in the planner (should point to next point) 
+     * \param linvel
+     *      provide linear velocity to get to the starting point 
+     * \param angvel 
+     *      provide linear velocity to get to the starting point 
+     * \param finalheading 
+     *      provide orientation at the end of the path 
+     * \param settletime 
+     *      provide maximum time to reach point 
+     * \param condition 
+     *      provide actions to run while on the path
      */
     void follow (std::vector<std::vector<double>> path, double initalheading, double linvel, double angvel, double finalheading, double settletime, 
     std::function<void(double,double)> conditions = [](double,double){return;}) {
@@ -61,10 +73,11 @@ class ramsete {
             // keep adjusting until within a tolerance 
             time.set(settletime);
             while (true) {
-            //fetch current x,y values from odom functions 
-            currentx = 2;
-            currenty = 2;
-            currentheading = imu.get_heading();
+            //fetch current x,y values from odom functions
+            pose = chassis.getPose(); 
+            currentx = pose.x;
+            currenty = pose.y;
+            currentheading = pose.theta;
             //calculate error in the robot's local frame 
             double errorx = (targetx - currentx)*cos(currentheading) + (targety - currenty)*sin(currentheading);
             double errory = -(targety - currenty)*sin(currentheading) + (targetx - currentx)*cos(currentheading);
@@ -98,6 +111,11 @@ class ramsete {
 
 }; 
 
+/**
+ * a function to determine the   
+ * 
+ * 
+ */
 bool withintol (double var,double check,double tol = .2) {
     if ((check-tol) < var < (check+tol)) {
         return true;

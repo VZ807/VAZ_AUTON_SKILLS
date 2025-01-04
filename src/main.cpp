@@ -1,8 +1,8 @@
 #include "main.h"
-#include "odom.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "ramsete.hpp"
 #include "paths.hpp"
+#include "roboconfig.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -31,6 +31,7 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+	chassis.calibrate();
 }
 
 /**
@@ -63,7 +64,10 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	lemlib::init();
 	ramsete drive;
+	chassis.setPose(-70.471, -21.513, 74.8932);
+	pose = chassis.getPose();
 	auto path1cond = [](double x,double y) {
 			if (withintol(x,10) && withintol(y,10)) {
 				intake.move(600);
