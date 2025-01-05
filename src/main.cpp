@@ -1,5 +1,10 @@
 #include "main.h"
 
+bool withintol  (double var,double check,double tol = .2) {
+    if ((check-tol) < var < (check+tol)) {
+        return true;
+    } else return false;
+} 
 
 /**
  * A callback function for LLEMU's center button.
@@ -64,7 +69,7 @@ void autonomous() {
 	std::queue<double> posebuff;
 	pros::Task odomloop{[=]{
 	while (true) {
-		odom_mutex.take();
+		odom_mutex.take(30);
 		lemlib::update();
 		pros::delay(10);
 		odom_mutex.give();

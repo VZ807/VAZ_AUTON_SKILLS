@@ -2,7 +2,7 @@
 
 
 void ramsete::follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
-    std::function<void(double,double)> conditions = [](double,double){return;}) {
+std::function<void(double,double)> conditions) {
         double currentx;
         double currenty;
         double currentheading;
@@ -89,8 +89,3 @@ void ramsete::follow (std::vector<std::vector<double>> path, double initlinvel, 
         } 
     }   
 
-bool withintol  (double var,double check,double tol = .2) {
-    if ((check-tol) < var < (check+tol)) {
-        return true;
-    } else return false;
-}

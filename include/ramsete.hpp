@@ -22,7 +22,7 @@ class ramsete {
      *      provide actions to run while on the path
      */
     void follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
-    std::function<void(double,double)> conditions = [](double,double){return;});
+    std::function<void(double,double)> conditions = [](double,double){});
 }; 
 
 /**
@@ -30,4 +30,3 @@ class ramsete {
  * 
  * 
  */
-bool withintol (double var,double check,double tol = .2);
