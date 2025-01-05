@@ -80,6 +80,7 @@ void opcontrol(void);
 #include "ramsete.hpp"
 #include "paths.hpp"
 #include "queue"
+#include "subsystems.hpp"
 #endif
 
 #endif  // _PROS_MAIN_H_

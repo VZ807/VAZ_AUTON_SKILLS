@@ -54,10 +54,12 @@ std::function<void(double,double)> conditions) {
             time.set(settletime);
             while (true) {
             //fetch current x,y values from odom functions
+            odom_mutex.take();
             pose = chassis.getPose(); 
             currentx = pose.x;
             currenty = pose.y;
             currentheading = pose.theta;
+            odom_mutex.give();
             //calculate error in the robot's local frame 
             double errorx = (targetx - currentx)*cos(currentheading) + (targety - currenty)*sin(currentheading);
             double errory = -(targety - currenty)*sin(currentheading) + (targetx - currentx)*cos(currentheading);

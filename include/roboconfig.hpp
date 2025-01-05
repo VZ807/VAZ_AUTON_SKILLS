@@ -29,4 +29,7 @@
 	extern pros::Controller master;
 	extern lemlib::Pose pose;
 	extern pros::Mutex odom_mutex;
-#endif // _roboconfig_
+	extern pros::Optical color;
+	extern pros::Rotation fisheye;
+	extern pros::Motor fishmechmotor;
+#endif // _roboconfig

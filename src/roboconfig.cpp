@@ -48,4 +48,7 @@
 							);
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Pose pose(70.471, -21.513, 74.8932);
-	pros::Mutex odom_mutex;
+	pros::Mutex odom_mutex; 
+	pros::Optical color (3);
+	pros::Rotation fisheye(20);
+	pros::Motor fishmechmotor(15);

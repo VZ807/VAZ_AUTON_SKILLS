@@ -66,7 +66,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	std::queue<double> posebuff;
+	std::queue<lemlib::Pose> posebuff;
 	pros::Task odomloop{[=]{
 	while (true) {
 		odom_mutex.take(30);
