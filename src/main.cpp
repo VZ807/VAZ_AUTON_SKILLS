@@ -1,8 +1,5 @@
 #include "main.h"
-#include "lemlib/api.hpp" // IWYU pragma: keep
-#include "ramsete.hpp"
-#include "paths.hpp"
-#include "roboconfig.hpp"
+
 
 /**
  * A callback function for LLEMU's center button.
@@ -64,7 +61,16 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	lemlib::init();
+	std::queue<double> posebuff;
+	pros::Task odomloop{[=]{
+	while (true) {
+		odom_mutex.take();
+		lemlib::update();
+		pros::delay(10);
+		odom_mutex.give();
+	}
+	}};
+
 	ramsete drive;
 	chassis.setPose(-70.471, -21.513, 74.8932);
 	pose = chassis.getPose();

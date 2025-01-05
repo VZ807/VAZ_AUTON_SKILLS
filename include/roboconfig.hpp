@@ -52,4 +52,5 @@
 	double leftY = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 	double rightX = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 	lemlib::Pose pose(70.471, -21.513, 74.8932);
+	pros::Mutex odom_mutex;
 #endif // _roboconfig_

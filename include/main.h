@@ -75,6 +75,11 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 //#include <iostream>
+#include "roboconfig.hpp"
+#include "lemlib/api.hpp" // IWYU pragma: keep
+#include "ramsete.hpp"
+#include "paths.hpp"
+#include "queue"
 #endif
 
 #endif  // _PROS_MAIN_H_
