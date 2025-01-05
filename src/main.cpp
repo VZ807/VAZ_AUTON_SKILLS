@@ -75,7 +75,7 @@ void autonomous() {
 			return;	 
 	};
 
-	drive.follow(path1,90,300,200,0,200,path1cond);
+	drive.follow(path1,300,200,0,200,path1cond);
 
 
 }

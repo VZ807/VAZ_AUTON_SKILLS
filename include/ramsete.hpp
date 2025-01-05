@@ -7,9 +7,7 @@ class ramsete {
      * Implementation for the ramsete algoritm 
      * 
      * \param path  
-     *      input points for path here in {x,y,theta,linvel,angvel,direction}
-     * \param initialheading 
-     *      provide initial heading for the path as it is not calculated in the planner (should point to next point) 
+     *      input points for path here in {x,y,theta,linvel,angvel,direction} 
      * \param linvel
      *      provide linear velocity to get to the starting point 
      * \param angvel 
@@ -21,7 +19,7 @@ class ramsete {
      * \param condition 
      *      provide actions to run while on the path
      */
-    void follow (std::vector<std::vector<double>> path, double initalheading, double linvel, double angvel, double finalheading, double settletime, 
+    void follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
     std::function<void(double,double)> conditions = [](double,double){return;}) {
         double currentx;
         double currenty;
@@ -41,9 +39,9 @@ class ramsete {
             if (i = 0) {
             targetx = path[i][0];
             targety = path[i][1];
-            targetheading = initalheading;
-            targetlinvel = linvel;
-            targetangvel = angvel;    
+            targetheading = path[i][2];
+            targetlinvel = initlinvel;
+            targetangvel = initangvel;    
             } else if (i == path.size()) {
             targetx = path[i][0];
             targety = path[i][1];
