@@ -1,5 +1,5 @@
 #include "main.h"
-
+ 
 
 void ramsete::follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
 std::function<void(double,double)> conditions) {

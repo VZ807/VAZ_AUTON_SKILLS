@@ -80,12 +80,21 @@ void autonomous() {
 	chassis.setPose(-70.471, -21.513, 74.8932);
 	pose = chassis.getPose();
 	auto path1cond = [](double x,double y) {
-			if (withintol(x,10) && withintol(y,10)) {
-				intake.move(600);
+			if (withintol(x,-47.162) && withintol(y,-23.483)) {
+				clamp.set_value(HIGH);
+			} 
+			if (withintol(x,-31.204) && withintol(y,-23.224)) {
+				intake.move_velocity(600);
+			}
+			if (withintol(x,-57.664) && withintol(y,-62.38)) {
+				clamp.set_value(LOW);
+			}
+			if (withintol(x,-60.987) && withintol(y,-59.459)) {
+				intake.move_velocity(0);
 			}
 			return;	 
 	};
-
+	clamp.set_value(LOW);
 	drive.follow(path1,300,200,0,200,path1cond);
 
 
@@ -115,10 +124,9 @@ void opcontrol() {
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
 
 		// Arcade control scheme
-		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
-		left_mg.move(dir - turn);                      // Sets left motor voltage
-		right_mg.move(dir + turn);                     // Sets right motor voltage
+		double dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
+		double turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
+		chassis.curvature(dir,turn);
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }
