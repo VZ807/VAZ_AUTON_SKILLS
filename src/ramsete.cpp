@@ -1,5 +1,4 @@
-#include "main.h"
- 
+#include "ramsete.hpp"
 
 void ramsete::follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
 std::function<void(double,double)> conditions) {
@@ -18,13 +17,13 @@ std::function<void(double,double)> conditions) {
         for (int i = 0;i <= path.size()-1; ++i) {
             direction = path[i][5];
             //change the first and last params occording to inputs 
-            if (i = 0) {
+            if (i == 0) {
             targetx = path[i][0];
             targety = path[i][1];
             targetheading = path[i][2];
             targetlinvel = initlinvel;
             targetangvel = initangvel;    
-            } else if (i == path.size()) {
+            } else if (i +1 == path.size()) {
             targetx = path[i][0];
             targety = path[i][1];
             targetheading = finalheading;
@@ -39,7 +38,7 @@ std::function<void(double,double)> conditions) {
             }
             //invert heading and reverse ang and lin velocities to move backwards 
             if (direction == 1) {
-                backwards != backwards;
+                backwards = !backwards;
                 if (backwards == true) {
                 if (targetheading > 180 || targetheading == 180) {
                     targetheading -= 180;
@@ -69,8 +68,8 @@ std::function<void(double,double)> conditions) {
                 break;
             }
             //compute gainvalues 
-            double b = 1; 
-            double zeta = 1; 
+            double b = 1; //roughly proportional
+            double zeta = 1; //dampining term
             double k = 2 * zeta * sqrt((pow(targetangvel,2) + b) * pow(targetlinvel,2)); //gainvalue
             //compute output velocities 
             double linvel = targetlinvel * cos(errorheading) + k * errorx;

@@ -1,5 +1,4 @@
-#include "main.h"
-
+#include "paths.hpp"
 std::vector<std::vector<double>> path1 = {
 {-63.07, -24.308, 0, 122.67, 0, 0},
 {-61.072, -24.225, 87.6212, 120.582, -400, 0},

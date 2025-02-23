@@ -1,4 +1,5 @@
 #include "main.h"
+#include "MCL.hpp"
 
 bool withintol  (double var,double check,double tol = .2) {
     if ((check-tol) < var < (check+tol)) {
@@ -66,19 +67,22 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	std::queue<lemlib::Pose> posebuff;
+	monte Monte;
+	Monte.carloinit(400);
+	chassis.setPose(-70.471, -21.513, 74.8932);
 	pros::Task odomloop{[=]{
 	while (true) {
 		odom_mutex.take(30);
+		prevpose = pose;
 		lemlib::update();
+		pose = chassis.getPose();
 		pros::delay(10);
 		odom_mutex.give();
 	}
 	}};
 
 	ramsete drive;
-	chassis.setPose(-70.471, -21.513, 74.8932);
-	pose = chassis.getPose();
+
 	auto path1cond = [](double x,double y) {
 			if (withintol(x,-47.162) && withintol(y,-23.483)) {
 				clamp.set_value(HIGH);
@@ -124,8 +128,8 @@ void opcontrol() {
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
 
 		// Arcade control scheme
-		double dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		double turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
+		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
+		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
 		chassis.curvature(dir,turn);
 		pros::delay(20);                               // Run for 20 ms then update
 	}

@@ -1,8 +1,6 @@
+#ifndef RAMSETE_H
+#define RAMSETE_H 
 #include "main.h"
-#include "roboconfig.hpp"
-#include "lemlib/api.hpp" // IWYU pragma: keep
-//TODO 
-//make function def in src to redice bloat
 class ramsete {
     public:
     /**
@@ -25,8 +23,4 @@ class ramsete {
     std::function<void(double,double)> conditions = [](double,double){});
 }; 
 
-/**
- * a function to determine the   
- * 
- * 
- */
+#endif

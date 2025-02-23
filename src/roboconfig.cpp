@@ -1,4 +1,5 @@
-#include "main.h"
+#include "roboconfig.hpp"
+
     
     pros::MotorGroup right_mg ({-19, -17, -8},pros::MotorCartridge::green,pros::v5::MotorUnits::rotations);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
     pros::MotorGroup left_mg ({1,5, 18},pros::MotorCartridge::green,pros::v5::MotorUnits::rotations);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
@@ -48,7 +49,10 @@
 							);
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	lemlib::Pose pose(70.471, -21.513, 74.8932);
+	lemlib::Pose prevpose = pose;
 	pros::Mutex odom_mutex; 
 	pros::Optical color (3);
 	pros::Rotation fisheye(20);
 	pros::Motor fishmechmotor(15);
+	pros::Distance eye(21);
+	monte::distsensconfig distconfig(6,-8,90);
