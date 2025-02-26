@@ -4,9 +4,10 @@
     pros::MotorGroup right_mg ({-19, -17, -8},pros::MotorCartridge::green,pros::v5::MotorUnits::rotations);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
     pros::MotorGroup left_mg ({1,5, 18},pros::MotorCartridge::green,pros::v5::MotorUnits::rotations);  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	pros::Motor intake (6,pros::MotorCartridge::blue);
+	pros::Motor conveyer (15,pros::MotorCartridge::blue);
 	//pros::Motor lady (1,pros::MotorCartridge::red);
 	lemlib::Drivetrain drivetrain (&left_mg,&right_mg,10,lemlib::Omniwheel::OLD_4,435,2);
-	pros::Imu imu(9);	
+	pros::Imu imu(4);	
 	pros::adi::DigitalOut clamp ('a',LOW);
 	pros::Rotation horizontal_encoder(20);
 	// vertical tracking wheel encoder
@@ -53,6 +54,6 @@
 	pros::Mutex odom_mutex; 
 	pros::Optical color (3);
 	pros::Rotation fisheye(20);
-	pros::Motor fishmechmotor(15);
+	pros::Motor fishmechmotor(14);
 	pros::Distance eye(21);
 	monte::distsensconfig distconfig(6,-8,90);

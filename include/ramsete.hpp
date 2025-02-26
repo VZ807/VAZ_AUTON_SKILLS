@@ -20,7 +20,15 @@ class ramsete {
      *      provide actions to run while on the path
      */
     void follow (std::vector<std::vector<double>> path, double initlinvel, double initangvel, double finalheading, double settletime, 
-    std::function<void(double,double)> conditions = [](double,double){});
+    std::function<void(double,double)> conditions = [](double,double){}); 
+
+    double degtorad (double deg) {
+        return deg * (M_PI/180);
+    }
+
+    double radtodeg (double rad) {
+        return rad * (180/M_PI);
+    }
 }; 
 
 #endif

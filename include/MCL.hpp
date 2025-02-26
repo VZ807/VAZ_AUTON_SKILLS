@@ -33,12 +33,34 @@ struct Rectangle {
         : TL(TL), TR(TR), BL(BL), BR(BR), 
           top(TL, TR), bottom(BL, BR), left(TL, BL), right(TR, BR) {} 
 };
-
+    /**
+     * Initializer function, creates an array of random particels around starting pose 
+     * @param particlecount 
+     *          amount of particles in array
+     */
     void carloinit (int particlecount);
-    std::vector<double> carlo();
+    /**
+     * Updates particles using odom data 
+     */
+    void carlo();
+    /**
+     * Provide a random double value within specified range
+     * @param min
+     *        lower bound
+     * @param max
+     *        upper bound
+     */
     double randomDoubleInRange(double min,double max);
+    /**
+     * A raycasing algorithm  
+     * @param x
+     * @param y
+     * @param theta 
+     * @param lines 
+     *     Input vector of lines to check intersections 
+     * 
+     */
     double linerayintersection (double x,double y,double theta, std::vector<wall> lines); 
-
     struct distsensconfig {
     float distsensoffx;
     float distsensoffy;
@@ -50,4 +72,4 @@ struct Rectangle {
 
 
 }; 
-#endif //MCL_H
+#endif //MCL_HPP

@@ -57,7 +57,7 @@ std::function<void(double,double)> conditions) {
             pose = chassis.getPose(); 
             currentx = pose.x;
             currenty = pose.y;
-            currentheading = pose.theta;
+            currentheading = degtorad(pose.theta);
             odom_mutex.give();
             //calculate error in the robot's local frame 
             double errorx = (targetx - currentx)*cos(currentheading) + (targety - currenty)*sin(currentheading);
@@ -70,7 +70,7 @@ std::function<void(double,double)> conditions) {
             //compute gainvalues 
             double b = 1; //roughly proportional
             double zeta = 1; //dampining term
-            double k = 2 * zeta * sqrt((pow(targetangvel,2) + b) * pow(targetlinvel,2)); //gainvalue
+            double k = 2 * zeta * sqrt(pow(targetangvel,2) + (b * pow(targetlinvel,2))); //gainvalue
             //compute output velocities 
             double linvel = targetlinvel * cos(errorheading) + k * errorx;
             double angvel;

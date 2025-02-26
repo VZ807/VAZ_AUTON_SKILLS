@@ -1,5 +1,7 @@
 #include "main.h"
 #include "MCL.hpp"
+#include "PID.hpp"
+
 
 bool withintol  (double var,double check,double tol = .2) {
     if ((check-tol) < var < (check+tol)) {
@@ -67,21 +69,37 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	PID pid;
+	/*
+	fishmechmotor.move_velocity(75);
+	pros::delay(500);
+	fishmechmotor.move_velocity(0);
+	*/
+	pid.drive(3,500,400);
+	clamp.set_value(HIGH);
+	pid.turn(270);
+	intake.move(-127);
+	conveyer.move(-127);
+	/*
 	monte Monte;
 	Monte.carloinit(400);
-	chassis.setPose(-70.471, -21.513, 74.8932);
-	pros::Task odomloop{[=]{
+	chassis.setPose(-64.22, -6.611, 113.334);
+	pros::Task odomloop{[&]{
 	while (true) {
-		odom_mutex.take(30);
+		//prevent race condition with RAMSETE, gives thread back after 50ms
+		odom_mutex.take(50);
 		prevpose = pose;
 		lemlib::update();
-		pose = chassis.getPose();
+		pose = chassis.getPose();	
+		Monte.carlo();
 		pros::delay(10);
+		//Give thread back to allow other programs to execute
 		odom_mutex.give();
 	}
 	}};
 
 	ramsete drive;
+	drive.follow(path2,300,100,0,2);
 
 	auto path1cond = [](double x,double y) {
 			if (withintol(x,-47.162) && withintol(y,-23.483)) {
@@ -100,6 +118,7 @@ void autonomous() {
 	};
 	clamp.set_value(LOW);
 	drive.follow(path1,300,200,0,200,path1cond);
+	*/
 
 
 }

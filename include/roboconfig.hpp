@@ -6,6 +6,7 @@
 	extern pros::MotorGroup right_mg;    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
     extern pros::MotorGroup left_mg ;  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 	extern pros::Motor intake;
+	extern pros::Motor conveyer;
 	//pros::Motor lady (1,pros::MotorCartridge::red);
 	extern lemlib::Drivetrain drivetrain;
 	extern pros::Imu imu;	
