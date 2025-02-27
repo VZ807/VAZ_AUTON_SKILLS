@@ -20,19 +20,19 @@ std::function<void(double,double)> conditions) {
             if (i == 0) {
             targetx = path[i][0];
             targety = path[i][1];
-            targetheading = path[i][2];
+            targetheading = degtorad(path[i][2]);
             targetlinvel = initlinvel;
             targetangvel = initangvel;    
             } else if (i +1 == path.size()) {
             targetx = path[i][0];
             targety = path[i][1];
-            targetheading = finalheading;
+            targetheading = degtorad(finalheading);
             targetlinvel = 0;
             targetangvel = 0;
             } else {
             targetx = path[i][0];
             targety = path[i][1];
-            targetheading = path[i][2];
+            targetheading = degtorad(path[i][2]);
             targetlinvel = path[i][3];
             targetangvel = path[i][4];
             }
@@ -40,11 +40,11 @@ std::function<void(double,double)> conditions) {
             if (direction == 1) {
                 backwards = !backwards;
                 if (backwards == true) {
-                if (targetheading > 180 || targetheading == 180) {
-                    targetheading -= 180;
-                } else {
-                    targetheading += 180;
-                }
+                // Invert heading by adding π (180° in radians)
+                targetheading = targetheading + M_PI;
+                // Normalize targetheading to the range [-π, π]
+                while (targetheading > M_PI) targetheading -= 2 * M_PI;
+                while (targetheading < -M_PI) targetheading += 2 * M_PI;
                 targetlinvel *= -1;
                 targetangvel *= -1; 
                 }
@@ -60,8 +60,8 @@ std::function<void(double,double)> conditions) {
             currentheading = degtorad(pose.theta);
             odom_mutex.give();
             //calculate error in the robot's local frame 
-            double errorx = (targetx - currentx)*cos(currentheading) + (targety - currenty)*sin(currentheading);
-            double errory = -(targety - currenty)*sin(currentheading) + (targetx - currentx)*cos(currentheading);
+            double errorx = (targetx - currentx) * cos(currentheading) + (targety - currenty) * sin(currentheading);
+            double errory = -sin(currentheading) * (targetx - currentx) + cos(currentheading) * (targety - currenty);
             double errorheading = targetheading - currentheading;
             //exit within tolerance
             if ((abs(errorx) < .2 && abs(errory) < .2 && abs(errorheading) < .5 )|| time.isDone() == true) {
@@ -84,7 +84,7 @@ std::function<void(double,double)> conditions) {
             left_mg.move_velocity(linvel + angvel);
             right_mg.move_velocity(linvel - angvel); 
 
-            pros::delay(10); 
+            pros::delay(20); 
             }
             conditions(currentx,currenty);
         } 
