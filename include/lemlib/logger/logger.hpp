@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <array>
+#include <memory>
 
 #define FMT_HEADER_ONLY
 #include "fmt/core.h"

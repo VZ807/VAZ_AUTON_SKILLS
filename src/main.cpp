@@ -1,13 +1,19 @@
 #include "main.h"
-#include "MCL.hpp"
 #include "PID.hpp"
-
-
-bool withintol  (double var,double check,double tol = .2) {
-    if ((check-tol) < var < (check+tol)) {
-        return true;
-    } else return false;
-} 
+#include "pros/misc.h"
+#include "roboconfig.hpp"
+#include "robodash/api.h"
+#include "robodash/views/image.hpp"
+#include "subsystems.hpp"
+#include <cstdio>
+#include <vector>
+extern lv_img_dsc_t mqdefault;
+bool withintol(double var, double check, double tol = .2) {
+  if ((check - tol) < var < (check + tol)) {
+    return true;
+  } else
+    return false;
+}
 
 /**
  * A callback function for LLEMU's center button.
@@ -16,29 +22,34 @@ bool withintol  (double var,double check,double tol = .2) {
  * "I was pressed!" and nothing.
  */
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+  static bool pressed = false;
+  pressed = !pressed;
+  if (pressed) {
+    pros::lcd::set_text(2, "I was pressed!");
+  } else {
+    pros::lcd::clear_line(2);
+  }
 }
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
-	chassis.calibrate();
+void SWP() {
+  PID pid;
+  imu.set_heading(315);
+  conveyer.move_relative(100, 100);
+  pid.drive(2, 2000); 
+  pid.turn(135);
+  pid.drive(-20,5000);
 }
 
+rd::Selector selector({{"Good auton", SWP}});
+rd::Image image(&mqdefault, "lebron");
+void initialize() {
+  // here
+}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -53,7 +64,7 @@ void disabled() {}
  * on the LCD.
  *
  * This task will exit when the robot is enabled and autonomous or opcontrol
- * starts.
+ * starts.:
  */
 void competition_initialize() {}
 
@@ -69,58 +80,10 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	PID pid;
-	/*
-	fishmechmotor.move_velocity(75);
-	pros::delay(500);
-	fishmechmotor.move_velocity(0);
-	*/
-	pid.drive(3,500,400);
-	clamp.set_value(HIGH);
-	pid.turn(270);
-	intake.move(-127);
-	conveyer.move(-127);
-	/*
-	monte Monte;
-	Monte.carloinit(400);
-	chassis.setPose(-64.22, -6.611, 113.334);
-	pros::Task odomloop{[&]{
-	while (true) {
-		//prevent race condition with RAMSETE, gives thread back after 50ms
-		odom_mutex.take(50);
-		prevpose = pose;
-		lemlib::update();
-		pose = chassis.getPose();	
-		Monte.carlo();
-		pros::delay(10);
-		//Give thread back to allow other programs to execute
-		odom_mutex.give();
-	}
-	}};
-
-	ramsete drive;
-	drive.follow(path2,300,100,0,2);
-
-	auto path1cond = [](double x,double y) {
-			if (withintol(x,-47.162) && withintol(y,-23.483)) {
-				clamp.set_value(HIGH);
-			} 
-			if (withintol(x,-31.204) && withintol(y,-23.224)) {
-				intake.move_velocity(600);
-			}
-			if (withintol(x,-57.664) && withintol(y,-62.38)) {
-				clamp.set_value(LOW);
-			}
-			if (withintol(x,-60.987) && withintol(y,-59.459)) {
-				intake.move_velocity(0);
-			}
-			return;	 
-	};
-	clamp.set_value(LOW);
-	drive.follow(path1,300,200,0,200,path1cond);
-	*/
-
-
+  chassis.calibrate();
+    SWP();
+  //selector.run_auton();
+  // chassis.calibrate();
 }
 
 /**
@@ -137,19 +100,39 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::MotorGroup left_mg({1, -2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
-	pros::MotorGroup right_mg({-4, 5, -6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 
+  pros::Controller master(pros::E_CONTROLLER_MASTER);
+  subsystem sub;
+  bool clampstate = false;
+  while (true) {
+    pros::lcd::print(0, "%d %d %d",
+                     (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
+                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >>
+                         0); // Prints status of the emulated screen LCDs
 
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
+    // Arcade control scheme
+    int dir = master.get_analog(ANALOG_LEFT_Y);
+    int turn = master.get_analog(ANALOG_RIGHT_X);
+    // std::vector<double> dist = left_mg.get_position_all();
+    // printf("Dist: %f \n", (dist[0] + dist[1] + dist[2]) / 3);
+    printf("lady deg: %f\n", lady.get_position());
+    if (master.get_digital(DIGITAL_R2)) {
+      conveyer.move_velocity(450);
+      intake.move_velocity(-450);
+    } else if (master.get_digital(DIGITAL_R1)) {
+      conveyer.move_velocity(-450);
+      intake.move_velocity(450);
 
-		// Arcade control scheme
-		int dir = master.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int turn = master.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
-		chassis.curvature(dir,turn);
-		pros::delay(20);                               // Run for 20 ms then update
-	}
+    } else {
+      conveyer.move_velocity(0);
+      intake.move_velocity(0);
+    }
+    if (master.get_digital(DIGITAL_Y)) {
+      clampstate = !clampstate;
+      clamp.set_value(clampstate);
+      pros::delay(500);
+    }
+    chassis.curvature(dir, turn);
+    pros::delay(20); // Run for 20 ms then update
+  }
 }

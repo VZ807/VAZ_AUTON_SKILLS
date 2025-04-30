@@ -1,10 +1,11 @@
 #ifndef SUBSYSTEMS_H
 #define SUBSYSTEMS_H
 #include "main.h"
+#include "roboconfig.hpp"
 class subsystem {
-    public:
-    void colorsort ();
+public:
+  void colorsort();
 
-    void fishmech(double deg,double exitcon = 4000);
+  void ladybrown(double deg, double exitcon = 300);
 };
 #endif

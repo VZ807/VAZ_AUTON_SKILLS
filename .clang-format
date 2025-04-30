@@ -1,0 +1,5 @@
+BasedOnStyle: LLVM
+ColumnLimit: 170
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AllowAllParametersOfDeclarationOnNextLine: false

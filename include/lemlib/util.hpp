@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cmath>
-#include <vector>
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/pose.hpp"
+#include <cmath>
+#include <vector>
 
 namespace lemlib {
 /**
@@ -92,8 +92,7 @@ constexpr float sanitizeAngle(float angle, bool radians = true);
  * angleError(350, 10, false); // returns -20
  * @endcode
  */
-float angleError(float target, float position, bool radians = true,
-                 AngularDirection direction = AngularDirection::AUTO);
+float angleError(float target, float position, bool radians = true, AngularDirection direction = AngularDirection::AUTO);
 
 /**
  * @brief Return the sign of a number
